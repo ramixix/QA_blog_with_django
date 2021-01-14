@@ -12,8 +12,8 @@
                 <small class="text-muted">Category : <a href="#">{{ post.category }}</a></small>
                 {% if object.author == user %}
                     <div class="mb-2 mt-2">
-                        <a class="btn btn-sm btn-secondary" href="#">Update</a>
-                        <a class="btn btn-sm btn-danger" href="#">Delete</a>
+                        <a class="btn btn-sm btn-secondary" href="{% url 'post-update' object.id %}">Update</a>
+                        <a class="btn btn-sm btn-danger" href="{% url 'post-delete' object.id %}">Delete</a>
                     </div>
                 {% endif %}
             </div>
