@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from .forms import PostCreateForm, NewCommentForm
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator
@@ -40,7 +41,7 @@ class PostDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(PostDetailView, self).get_context_data(*args, **kwargs)
         current_post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        comments_connected = Comment.objects.filter(post= self.get_object())
+        comments_connected = Comment.objects.filter(post= self.get_object()).order_by('-comment_time')
         #context['comments'] = Comment.objects.filter(post=current_post)
         context['all_dislikes'] = current_post.all_dislikes()
         context['all_likes'] = current_post.all_likes()
@@ -169,3 +170,27 @@ def DisLikeView(request, pk):
     if request.is_ajax():
         html = render_to_string('blog/like_section.html', context, request=request)
         return JsonResponse({'form':html})
+
+@login_required
+def CommentLikeView(request, pk):
+    comment = get_object_or_404(Comment, id=request.POST.get('comment_id'))
+    if comment.like.filter(id=request.user.id).exists():
+        comment.like.remove(request.user)
+    elif comment.dislike.filter(id=request.user.id).exists():
+        comment.dislike.remove(request.user)
+        comment.like.add(request.user)
+    else:
+        comment.like.add(request.user)
+    return HttpResponseRedirect(reverse("post-detail", args=[str(comment.post.id)]))
+
+@login_required
+def CommentDisLikeView(request, pk):
+    comment = get_object_or_404(Comment, id=request.POST.get('comment_id'))
+    if comment.dislike.filter(id=request.user.id).exists():
+        comment.dislike.remove(request.user)
+    elif comment.like.filter(id=request.user.id).exists():
+        comment.like.remove(request.user)
+        comment.dislike.add(request.user)
+    else:
+        comment.dislike.add(request.user)
+    return HttpResponseRedirect(reverse("post-detail", args=[str(comment.post.id)]))
