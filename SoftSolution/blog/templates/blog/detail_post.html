@@ -24,4 +24,51 @@
             </div>
         </article>
 
+        <div id="like-section" class="container">
+            {% include 'blog/like_section.html' %}
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(event){
+                $(document).on('click', '#like', function(event){
+                    event.preventDefault();
+                    $.ajax({
+                        type : 'POST',
+                        url : "{% url 'like-post' object.id %}",
+                        data : {'csrfmiddlewaretoken' : '{{ csrf_token }}'},
+                        dataType : 'json',
+                        success: function(response){
+                            $('#like-section').html(response['form'])
+                            
+                        },
+                        error: function(rs, e){
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+            });
+        </script>
+    
+        <script type="text/javascript">
+            $(document).ready(function(event){
+                $(document).on('click', '#dislike', function(event){
+                    event.preventDefault();
+                    $.ajax({
+                        type : 'POST',
+                        url : "{% url 'dislike-post' object.id %}",
+                        data : {'csrfmiddlewaretoken' : '{{ csrf_token }}'},
+                        dataType : 'json',
+                        success: function(response){
+                            $('#like-section').html(response['form'])
+                        },
+                        error: function(rs, e){
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+            });
+        </script>
+
 {% endblock content %}
