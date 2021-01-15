@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (Homeview, About, PostCreateView, PostDetailView, PostUpdateView,
                     PostDeleteView, CategoryView, UserProfileView, LikeView, DisLikeView,
+                    CommentLikeView, CommentDisLikeView,
                     )
 
 
@@ -15,4 +16,6 @@ urlpatterns = [
     path('usr/<str:username>/', UserProfileView.as_view(), name="user-profile"),
     path('like/<int:pk>/', LikeView, name="like-post"),
     path('dislike/<int:pk>/', DisLikeView, name="dislike-post"),
+    path('comment/<int:pk>/like', CommentLikeView, name="like-comment"),
+    path('comment/<int:pk>/dislike', CommentDisLikeView, name="dislike-comment"),
 ]
