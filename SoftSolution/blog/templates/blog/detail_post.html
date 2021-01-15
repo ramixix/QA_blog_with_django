@@ -3,10 +3,10 @@
 
 {% block content %}
         <article class="media content-section">
-            <img class="rounded-circle article-img" src="#" >
+            <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" >
             <div class="media-body">
             <div class="article-metadata">
-                <a class="" href="#">{{ object.author }}</a>
+                <a class="" href="{% url 'user-profile' post.author.username %}" style="text-decoration: none">{{ object.author }}</a>
                 <br>
                 <small class="text-muted">Date objected : {{ object.date_posted | date:"F d, Y" }} | Last Modified : {{ object.last_modified }}</small><br>
                 <small class="text-muted">Category : <a href="{% url 'blog-category' object.category %}">{{ post.category }}</a></small>
