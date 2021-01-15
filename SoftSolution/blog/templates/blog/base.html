@@ -44,15 +44,24 @@
                             </ul>
                     </li>
 
-
+                    {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'post-create' %}">Create Post</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Register</a>
+                            <a class="nav-link" href="#">Profile</a>
+                        </li>
+                        <li class="nav-item mr-auto">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'user-registration' %}">Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Login</a>
+                            <a class="nav-link" href="{% url 'login' %} ">Login</a>
+                        </li>
+                    {% endif %}
 
                 </ul>
             </div>
@@ -60,13 +69,19 @@
         </nav>
 
         <main role="main" class="container" style="margin-top: 5%;">
-            <div class="row">
-                <div class="col-md-11">
-                    {% block content %}
-                    {% endblock content %}
-                </div>
+        <div class="row">
+            <div class="col-md-11">
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" style="padding: 5px ; margin-top: 10px;"> {{ message }}</div>
+                {% endfor %}
+                {% endif %}
+
+                {% block content %}
+                {% endblock content %}
             </div>
-        </main>
+        </div>
+    </main>
 
     <!-- Optional JavaScript; choose one of the two! -->
 
