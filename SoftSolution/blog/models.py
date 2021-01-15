@@ -22,6 +22,12 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('blog-home')
 
+    def all_likes(self):
+        return self.like.count()
+
+    def all_dislikes(self):
+        return self.dislike.count()
+
 class Category(models.Model):
     name = models.CharField(max_length=150)
     logo = models.ImageField(default="default.png", upload_to="blog_category")
