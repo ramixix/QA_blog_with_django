@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
 
     'crispy_forms',
+    'django_static_fontawesome',
 
 ]
 
