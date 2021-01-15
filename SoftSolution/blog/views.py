@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from .models import Post,Category
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -75,4 +75,19 @@ class CategoryView(UserPassesTestMixin, ListView):
         posts = Post.objects.filter(category=self.kwargs.get('cat'))
 
         context['posts'] = posts
+        return context
+
+class UserProfileView(ListView):
+    model = User
+    template_name = "blog/user_profile.html"           
+    context_object_name = "user" 
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return user
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserProfileView, self).get_context_data(*args, **kwargs)
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        context['posts'] = Post.objects.filter(author=user.id)
         return context
