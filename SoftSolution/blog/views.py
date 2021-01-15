@@ -1,10 +1,13 @@
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
-from .models import Post,Category
+from .models import Post, Category
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from .forms import PostCreateForm
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
 # Create your views here.
 
 class Homeview(ListView):
@@ -64,18 +67,29 @@ class CategoryView(UserPassesTestMixin, ListView):
     model = Post
     template_name = "blog/categories.html"
     ordering = ["-date_posted"]
+    paginate_by = 2
 
     def test_func(self):
         if (Category.objects.filter(name=self.kwargs.get('cat')).exists()):
             return True
         return False
 
-
     def get_context_data(self, *args, **kwargs):
         context = super(CategoryView, self).get_context_data(*args, **kwargs)
         posts = Post.objects.filter(category=self.kwargs.get('cat'))
+        num_posts = posts.count()
+        paginator = Paginator(posts, self.paginate_by)
+        page = self.request.GET.get('page')
 
-        context['posts'] = posts
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+            
+        context['page_obj'] = posts
+        context['num_posts'] = num_posts
         return context
 
 class UserProfileView(ListView):
