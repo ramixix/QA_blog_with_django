@@ -5,6 +5,8 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from .forms import PostCreateForm
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.template.loader import render_to_string
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
@@ -34,6 +36,13 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail_post.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(PostDetailView, self).get_context_data(*args, **kwargs)
+        current_post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        context['all_dislikes'] = current_post.all_dislikes()
+        context['all_likes'] = current_post.all_likes()
+        return context
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -106,3 +115,44 @@ class UserProfileView(ListView):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         context['posts'] = Post.objects.filter(author=user.id)
         return context
+
+
+def LikeView(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    if post.like.filter(id=request.user.id).exists():
+        post.like.remove(request.user)
+    elif post.dislike.filter(id=request.user.id).exists():
+        post.dislike.remove(request.user)
+        post.like.add(request.user)
+    else:
+        post.like.add(request.user)
+    context = {
+        'object' : post,
+        'all_likes' : post.all_likes(),
+        'all_dislikes' : post.all_dislikes(),
+    }
+
+    if request.is_ajax():
+        html = render_to_string('blog/like_section.html', context, request=request)
+        return JsonResponse({'form':html})
+
+
+def DisLikeView(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    if post.dislike.filter(id=request.user.id).exists():
+        post.dislike.remove(request.user)
+    elif post.like.filter(id=request.user.id).exists():
+        post.like.remove(request.user)
+        post.dislike.add(request.user)
+    else:
+        post.dislike.add(request.user)
+    
+    context = {
+        'object' : post,
+        'all_likes' : post.all_likes(),
+        'all_dislikes' : post.all_dislikes(),
+    }
+
+    if request.is_ajax():
+        html = render_to_string('blog/like_section.html', context, request=request)
+        return JsonResponse({'form':html})
