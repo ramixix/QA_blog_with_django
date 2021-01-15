@@ -39,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
     'user.apps.UserConfig',
+    'searches.apps.SearchesConfig',
 
     'crispy_forms',
     'django_static_fontawesome',
-
+    
 ]
 
 MIDDLEWARE = [
