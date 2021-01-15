@@ -11,7 +11,7 @@
                 <a class="" style="text-decoration: none; font-size: 25px;" href="#">{{ post.author }}</a>
                 <br>
                 <small class="text-muted">Date Posted : {{ post.date_posted | date:"F d, Y" }}</small><br>
-                <small class="text-muted">Category : <a href="#">Category</a></small>
+                <small class="text-muted">Category : <a href="{% url 'blog-category' post.category %}">{{ post.category }}</a></small>
             </div>
             <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
             <div>

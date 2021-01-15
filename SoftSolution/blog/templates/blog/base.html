@@ -33,12 +33,14 @@
                     
                     <!-- category menu  -->
                     
-                    <li class="nav-item dropdown">
+                      <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Categories
+                          Categories
                         </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #ccd5e0; border: double 2px darkgrey; border-top: none; margin-left: 20%;">
-                                <li><a class="dropdown-item" href="#">deneme</a></li>
+                                {% for item in all_categories %}
+                                    <li><a class="dropdown-item" href="{% url 'blog-category' item %}"><img src="/media/{{item.logo}}"> {{ item }}</a></li>
+                                {% endfor %}
                             </ul>
                     </li>
 
