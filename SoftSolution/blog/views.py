@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from .models import Post
+from .models import Post,Category
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
+from .forms import PostCreateForm
 # Create your views here.
 
 class Homeview(ListView):
@@ -19,7 +20,8 @@ def About(request):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'blog/create_post.html'
-    fields = ['title', 'category', 'body', 'snippet']
+    form_class = PostCreateForm
+
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -55,3 +57,22 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author :
             return True
         return False
+
+
+class CategoryView(UserPassesTestMixin, ListView):
+    model = Post
+    template_name = "blog/categories.html"
+    ordering = ["-date_posted"]
+
+    def test_func(self):
+        if (Category.objects.filter(name=self.kwargs.get('cat')).exists()):
+            return True
+        return False
+
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CategoryView, self).get_context_data(*args, **kwargs)
+        posts = Post.objects.filter(category=self.kwargs.get('cat'))
+
+        context['posts'] = posts
+        return context

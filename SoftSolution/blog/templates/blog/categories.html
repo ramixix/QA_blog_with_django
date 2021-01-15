@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Categories Page {% endblock title %}
+
+{% block content %}
+    <h4 class="alert alert-info">{{ posts.count }} Posts Have Been Found In Choosen Category</h4>
+    {% for post in posts %}
+        <article class="media content-section">
+            <a href="{% url 'post-detail' post.id %}"><img class="rounded-circle article-img" ></a>
+            <div class="media-body">
+            <div class="article-metadata">
+                <a class="" style="text-decoration: none; font-size: 25px;" href="#">{{ post.author }}</a>
+                <br>
+                <small class="text-muted">Date Posted : {{ post.date_posted | date:"F d, Y" }}</small><br>
+                <small class="text-muted">Category : {{ post.category }}</small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+            <div>
+                <p class="article-content">{{ post.snippet | slice:500 }}</p>
+            </div>
+            </div>
+            <a href="{% url 'post-detail' post.id %}" class="btn btn-outline-secondary">See More...</a>
+        </article>
+    {% endfor %}
+
+{% endblock %}
