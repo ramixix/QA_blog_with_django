@@ -21,3 +21,10 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog-home')
+
+class Category(models.Model):
+    name = models.CharField(max_length=150)
+    logo = models.ImageField(default="default.png", upload_to="blog_category")
+
+    def __str__(self):
+        return self.name
