@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from .models import Post, Category
+from .models import Post, Category, Comment
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
-from .forms import PostCreateForm
+from .forms import PostCreateForm, NewCommentForm
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator
@@ -40,9 +40,22 @@ class PostDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(PostDetailView, self).get_context_data(*args, **kwargs)
         current_post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        comments_connected = Comment.objects.filter(post= self.get_object())
+        #context['comments'] = Comment.objects.filter(post=current_post)
         context['all_dislikes'] = current_post.all_dislikes()
         context['all_likes'] = current_post.all_likes()
+        context['comments'] = comments_connected
+
+        if self.request.user.is_authenticated:
+            context['comment_form'] = NewCommentForm(instance=self.request.user)
+
         return context
+
+    def post(self, request, *args, **kwargs):
+
+        new_comment = Comment(content=request.POST.get('content'), user=self.request.user, post=self.get_object())
+        new_comment.save()
+        return HttpResponseRedirect(reverse("post-detail",kwargs={'pk':self.kwargs.get('pk')}))
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
