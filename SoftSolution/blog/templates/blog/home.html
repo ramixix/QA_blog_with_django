@@ -1,0 +1,25 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Home Page{% endblock title %}
+
+{% block content %}
+    {% for post in posts %}
+        <article class="media content-section">
+            <a href="{% url 'post-detail' post.id %}"><img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" ></a>
+            <div class="media-body">
+            <div class="article-metadata">
+                <a class="" style="text-decoration: none; font-size: 25px;" href="{% url 'user-profile' post.author.username %}">{{ post.author }}</a>
+                <br>
+                <small class="text-muted">Date Posted : {{ post.date_posted | date:"F d, Y" }}</small><br>
+                <small class="text-muted">Category : <a href="{% url 'blog-category' post.category %}">{{ post.category }}</a></small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+            <div>
+                <p class="article-content">{{ post.snippet | slice:500 }}</p>
+            </div>
+            </div>
+            <a href="{% url 'post-detail' post.id %}" class="btn btn-outline-secondary">See More...</a>
+        </article>
+    {% endfor %}
+
+{% endblock content %}

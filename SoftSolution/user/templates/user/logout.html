@@ -1,0 +1,16 @@
+{% extends "blog/base.html" %}
+
+{% block title %} Logout Page {% endblock title %}
+
+{% block content %}
+    <h2 class="alert alert-warning">You Have Been Log Out</h2>
+    <div class="border-top">
+        <small class="text-muted">
+            Do You Want To Login Again? <a class="ml-2" href="{% url 'login' %}">Login</a>
+        </small><br>
+        <small class="text-muted">
+            <a class="ml-2" href="{% url 'blog-home' %}">Come Back Home</a>
+        </small>
+    </div>
+
+{% endblock content %}
