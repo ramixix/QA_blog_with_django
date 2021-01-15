@@ -9,7 +9,7 @@
                 <a class="" href="#">{{ object.author }}</a>
                 <br>
                 <small class="text-muted">Date objected : {{ object.date_posted | date:"F d, Y" }} | Last Modified : {{ object.last_modified }}</small><br>
-                <small class="text-muted">Category : <a href="#">{{ post.category }}</a></small>
+                <small class="text-muted">Category : <a href="{% url 'blog-category' object.category %}">{{ post.category }}</a></small>
                 {% if object.author == user %}
                     <div class="mb-2 mt-2">
                         <a class="btn btn-sm btn-secondary" href="{% url 'post-update' object.id %}">Update</a>
