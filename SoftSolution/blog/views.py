@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from .models import Post, Category, Comment
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
+import pdb
 # Create your views here.
 
 class Homeview(ListView):
@@ -148,6 +149,7 @@ def LikeView(request, pk):
 
     if request.is_ajax():
         html = render_to_string('blog/like_section.html', context, request=request)
+
         return JsonResponse({'form':html})
 
 
@@ -173,7 +175,10 @@ def DisLikeView(request, pk):
 
 @login_required
 def CommentLikeView(request, pk):
-    comment = get_object_or_404(Comment, id=request.POST.get('comment_id'))
+    pdb.set_trace()
+    print(request.user.id)
+    comment = get_object_or_404(Comment, id=pk)
+    comments = Comment.objects.filter(post_id=comment.post.id)
     if comment.like.filter(id=request.user.id).exists():
         comment.like.remove(request.user)
     elif comment.dislike.filter(id=request.user.id).exists():
@@ -181,11 +186,32 @@ def CommentLikeView(request, pk):
         comment.like.add(request.user)
     else:
         comment.like.add(request.user)
-    return HttpResponseRedirect(reverse("post-detail", args=[str(comment.post.id)]))
 
-@login_required
+    context = {
+        'comments':comments,
+    }
+
+
+    if request.is_ajax():
+
+        if not request.user.id == None:
+
+            html = render_to_string('blog/comment_like_section.html',context,request=request)
+
+            return JsonResponse({'form': html})
+        else:
+
+            return HttpResponseRedirect(reverse('login'))
+
+
+
+
+
 def CommentDisLikeView(request, pk):
-    comment = get_object_or_404(Comment, id=request.POST.get('comment_id'))
+
+    comment = get_object_or_404(Comment, id=pk)
+    comments = Comment.objects.filter(post_id=comment.post.id)
+
     if comment.dislike.filter(id=request.user.id).exists():
         comment.dislike.remove(request.user)
     elif comment.like.filter(id=request.user.id).exists():
@@ -193,4 +219,14 @@ def CommentDisLikeView(request, pk):
         comment.dislike.add(request.user)
     else:
         comment.dislike.add(request.user)
-    return HttpResponseRedirect(reverse("post-detail", args=[str(comment.post.id)]))
+
+    context = {
+        'comments': comments,
+    }
+
+
+
+    if request.is_ajax():
+        html = render_to_string('blog/comment_like_section.html', context, request=request)
+        return JsonResponse({'form': html})
+
