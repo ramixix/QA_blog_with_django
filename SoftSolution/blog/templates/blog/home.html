@@ -1,8 +1,7 @@
 {% extends 'blog/base.html' %}
-
 {% block title %}Home Page{% endblock title %}
-
 {% block content %}
+    <!-- displaying posts in our home page -->
     {% for post in posts %}
         <article class="media content-section">
             <a href="{% url 'post-detail' post.id %}"><img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" ></a>
@@ -21,6 +20,7 @@
             <a href="{% url 'post-detail' post.id %}" class="btn btn-outline-secondary">See More...</a>
         </article>
     {% endfor %}
+    <!-- pagination  -->
     <div style="margin-left: 30px;">
     {% if is_paginated %}
 
@@ -35,8 +35,6 @@
             {% endfor %}
 
         {% endif %}
-
-            
 
         {% for page in page_obj.paginator.page_range %}
             {% if page == page_obj.number %}

@@ -37,10 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # added three apps for django to realize them and find the templates
     'blog.apps.BlogConfig',
     'user.apps.UserConfig',
     'searches.apps.SearchesConfig',
-
+    # two apps that we insatll for better styling the pages
     'crispy_forms',
     'django_static_fontawesome',
     
@@ -128,10 +129,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# after installing crispy package and add them to django apps, here we specify what version of bootstrap we want cirspy form use
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# login redirect url is going to redirect users after they login to site to home page of the blog
 LOGIN_REDIRECT_URL = 'blog-home'
+# specifying the login url to 'login'
 LOGIN_URL = "login"
 
+# determining path of pictures that are used in site to base_directory/media
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'

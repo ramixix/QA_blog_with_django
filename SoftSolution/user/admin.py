@@ -1,5 +1,5 @@
 from django.contrib import admin
 from .models import Profile
-# Register your models here.
 
+# Register profile model to admin page
 admin.site.register(Profile)

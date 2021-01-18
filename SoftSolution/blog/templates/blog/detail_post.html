@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 {% block title %}{{ object.author.first_name }} Post{% endblock title %}
-
 {% block content %}
+<!-- detail page for every post  -->
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" >
             <div class="media-body">
@@ -23,11 +23,11 @@
             </div>
             </div>
         </article>
-
+        <!-- post's like and dislike buttons section -->
         <div id="like-section" class="container">
             {% include 'blog/like_section.html' %}
         </div>
-
+        <!-- comment area -->
         {% if user.is_authenticated %}
             <div class="container"> 
                 <br>
@@ -41,6 +41,7 @@
                 
                 </form>
             </div>
+            <!-- if user is not authenticated then can't make comments so redirect them to login page -->
             {% else %}
             <div class="container"> 
                 <br>
@@ -56,17 +57,19 @@
             </div>
         {% endif %}
 
+        <!-- an info about the total number of comments using the function we write in post model -->
         <br>
         <strong class="text-secondary">{{ object.number_of_comments }} Comment{{ object.number_of_comments|pluralize }}</strong>
         <hr>
 
+        <!-- comment's like and dislike buttons section  -->
        <div id="comment-like-section" class="container">
             {% include 'blog/comment_like_section.html' %}
         </div>
 
-
+        <!-- ajax written for all like and dislike buttons to prevent refershing whole page after users click on these buttons -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+        <!-- ajax for post's like , post's dislike, comment's like, comment's dislike buttons in sequence-->
         <script type="text/javascript">
             $(document).ready(function(event){
                 $(document).on('click', '#like', function(event){
@@ -85,7 +88,7 @@
                         },
                     });
                 });
-
+                
                  $(document).on('click', '#dislike', function(event){
                     event.preventDefault();
                     $.ajax({

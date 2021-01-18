@@ -1,3 +1,4 @@
+<!-- display comments and comment's like and dislike buttons -->
 {% for comment in comments %}
     <div class="media content-section" style="border: rgb(183, 183, 197) 5px solid; border-radius: 10px; background-color: rgb(230, 230, 230); padding-bottom: 0;">
         <div style="padding: 5px;" >
@@ -15,6 +16,7 @@
                                     | {{ comment.comment_time|date:'F d, Y'}}</cite>
                         </div>
                         <div>
+                            <!-- check if user like or dislike or neither -->
                             {% if user in comment.like.all %}
                                 <div style="display: flex; flex-wrap: nowrap; margin-top: 10px; margin-bottom: 2px;">
                                     <form action="{% url 'like-comment' comment.id %}" method="POST">

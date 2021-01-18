@@ -8,6 +8,7 @@ from .forms import PostCreateForm, NewCommentForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.template.loader import render_to_string
+# the next three classes are imported for pagination post that are in specific categories look at CategoryView class
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger

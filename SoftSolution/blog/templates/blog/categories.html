@@ -1,10 +1,8 @@
 {% extends 'blog/base.html' %}
-
 {% block title %}Categories Page {% endblock title %}
-
 {% block content %}
+    <!-- displaying posts that are in a specific cateogries -->
     <div class="alert alert-info" style="padding: 5px;">{{num_posts}} Post{{ num_posts|pluralize }} Have Been Found In Choosen Category</div>
-    <!-- <h4 class="alert alert-info">{{num_posts}} Post{{ num_posts|pluralize }} Have Been Found In Choosen Category</h4> -->
     {% for post in page_obj %}
         <article class="media content-section">
             <a href="{% url 'post-detail' post.id %}"><img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" ></a>
@@ -24,6 +22,7 @@
         </article>
     {% endfor %}
 
+    <!-- pagination -->
     <div style="margin-left: 30px;">
     {% if is_paginated %}
 

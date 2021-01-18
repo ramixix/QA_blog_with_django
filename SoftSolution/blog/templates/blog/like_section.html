@@ -1,5 +1,6 @@
 {% if user.is_authenticated %}
     {% if user in object.like.all %}
+    <!--  html code for like and dislike buttons of posts -->
     <div style="display: flex; flex-wrap: nowrap;">
         <form action="{% url 'like-post' object.id %}" method="POST">
             {% csrf_token %}

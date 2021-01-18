@@ -1,8 +1,8 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 {% block title %} Post Creation Page {% endblock title %}
-
 {% block content %}
+<!-- page of creating posts -->
 <div class="content-section">
     <form method="POST">
         {% csrf_token %}
