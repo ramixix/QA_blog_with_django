@@ -5,14 +5,27 @@ from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required       # an decoder to make sure that user is login before opening profile view
 from django.contrib import messages
+from django.contrib.auth.models import User
 # Create your views here.
 
 # class for register view 
-class RegisterView(SuccessMessageMixin, CreateView):
-    form_class = SingupForm
-    template_name = "user/register.html"
-    success_url = reverse_lazy('login')
-    success_message = "Your account has been registered successfully, Now You Can Log In!"
+def Register(request):
+    form = SingupForm()
+    if request.method == 'POST':
+
+        form = SingupForm(request.POST)
+        email = request.POST['email']
+        emails = User.objects.filter(is_active=True).values_list('email', flat=True)
+
+        if email in emails:
+            form.add_error(None,'This email is already exists')
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Your Account Has been created succesfully")
+            return redirect('login')
+
+    context ={'form':form}
+    return render(request,'user/register.html',context)
 
 # function to handles the post and get request to profile page, if the request is post it is going to examine if the post form
 # is valid and if its then it is going to be save to database and redirect user to that profile page
