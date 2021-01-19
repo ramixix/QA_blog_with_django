@@ -13,8 +13,26 @@
                 {% if object.author == user %}
                     <div class="mb-2 mt-2">
                         <a class="btn btn-sm btn-secondary" href="{% url 'post-update' object.id %}">Update</a>
-                        <a class="btn btn-sm btn-danger" href="{% url 'post-delete' object.id %}">Delete</a>
+                        <button type="button" class="btn btn-sm btn-danger" id="show" >Delete</button>
                     </div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+
+      </div>
+      <div class="modal-body">
+        Are You Sure You Want To Delete This Post?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close_modal">Close</button>
+        <button type="button" class="btn btn-danger" id="delete_post">Delete Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
                 {% endif %}
             </div>
             <h2 class="article-title">{{ object.title }}</h2>
@@ -145,6 +163,30 @@
             });
         </script>
 
+        <script>
+            $('#show').click(function(){
+            $('#exampleModal').modal('show');
+                });
+            $('#close_modal').click(function(){
+            $('#exampleModal').modal('hide');
+                });
+                 $(document).on('click', '#delete_post', function(event){
+                    $.ajax({
+
+                        type : 'POST',
+                        url : "{% url 'post-delete' object.id %}",
+                        data : {'csrfmiddlewaretoken' : '{{ csrf_token }}'},
+                        success: function(response){
+                        $('#exampleModal').modal('hide');
+                        window.location.href="{% url 'blog-home' %}";
+
+                        },
+                        error: function(rs, e){
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+        </script>
 
 
 
