@@ -81,7 +81,7 @@ class Category(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    content = models.TextField(max_length=5000)
+    content = models.TextField()
     like = models.ManyToManyField(User, blank=True, related_name="comment_like")
     dislike = models.ManyToManyField(User, blank=True, related_name="comment_dislike")
     comment_time = models.DateTimeField(auto_now_add=True)
