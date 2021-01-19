@@ -1,25 +1,62 @@
 {% extends "blog/base.html" %}
+{% load static %}
 {% load crispy_forms_tags%}
 {% block title %} Login Page {% endblock title %}
 
 {% block content %}
-<div class="content-section">
-    <form method="POST">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            <legend class="border-bottom mb-4"> Log In </legend>
-            {{ form | crispy }}
-        </fieldset>
-        <br>
-        <div class="form-group">
-            <button class="btn btn-outline-dark" type="submit">Login</button>
+<link rel="stylesheet" type="text/css" href= "{% static 'blog/register.css' %}">
+<div>
+     {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
         </div>
-    </form>
-    <hr>
-    <div class="border-top">
-        <small class="text-muted">
-            Do You Need An Account? <a class="ml-2" href="{% url 'user-registration' %}">Sing Up</a>
-        </small>
-    </div>
-</div>
+    {% endfor %}
+{% endif %}
+ </div>
+<section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    <div class="signin-image">
+                        <figure><img src="/media/register-logo.jpg" alt="sing up image"></figure>
+                        <a href="{% url 'user-registration' %}" class="signup-image-link">Create an account</a>
+                    </div>
+
+                    <div class="signin-form">
+                        <h2 class="form-title">Sign in</h2>
+                        <form method="POST" class="register-form" id="login-form">
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                               <label> <i class="fas fa-user"></i> </label>
+                                <input type="text" name="username" id="username" placeholder="Username"/>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i></label>
+                                <input type="password" name="password" id="password" placeholder="Password"/>
+                            </div>
+
+                            <div class="form-group form-button">
+                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
+                            </div>
+                        </form>
+                        <div class="social-login">
+                            <span class="social-label">Or login with</span>
+                            <ul class="socials">
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 {% endblock content %}

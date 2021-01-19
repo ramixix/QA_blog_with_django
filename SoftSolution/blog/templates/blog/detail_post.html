@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 {% block title %}{{ object.author.first_name }} Post{% endblock title %}
-
 {% block content %}
+<!-- detail page for every post  -->
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" >
             <div class="media-body">
@@ -13,8 +13,26 @@
                 {% if object.author == user %}
                     <div class="mb-2 mt-2">
                         <a class="btn btn-sm btn-secondary" href="{% url 'post-update' object.id %}">Update</a>
-                        <a class="btn btn-sm btn-danger" href="{% url 'post-delete' object.id %}">Delete</a>
+                        <button type="button" class="btn btn-sm btn-danger" id="show" >Delete</button>
                     </div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+
+      </div>
+      <div class="modal-body">
+        Are You Sure You Want To Delete This Post?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close_modal">Close</button>
+        <button type="button" class="btn btn-danger" id="delete_post">Delete Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
                 {% endif %}
             </div>
             <h2 class="article-title">{{ object.title }}</h2>
@@ -23,5 +41,153 @@
             </div>
             </div>
         </article>
+        <!-- post's like and dislike buttons section -->
+        <div id="like-section" class="container">
+            {% include 'blog/like_section.html' %}
+        </div>
+        <!-- comment area -->
+        {% if user.is_authenticated %}
+            <div class="container"> 
+                <br>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                    {{ comment_form }}
+                        <br>
+                        <small><button class="btn btn-dark col-md-12" style="background-color: rgb(42, 175, 87);" type="submit">Add comment <i class="fas fa-comments"></i></button></small>
+                    </div>
+                
+                </form>
+            </div>
+            <!-- if user is not authenticated then can't make comments so redirect them to login page -->
+            {% else %}
+            <div class="container"> 
+                <br>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                    {{ comment_form }}
+                        <br>
+                        <a href="{% url 'login' %}?next={% url 'post-detail' object.id %}" class="btn col-md-12 text-muted" title="You need to login first to be able add comments" style="background-color: rgb(231, 193, 89);" type="submit">Add comment <i class="fas fa-comments"></i></a>
+                    </div>
+                
+                </form>
+            </div>
+        {% endif %}
+
+        <!-- an info about the total number of comments using the function we write in post model -->
+        <br>
+        <strong class="text-secondary">{{ object.number_of_comments }} Comment{{ object.number_of_comments|pluralize }}</strong>
+        <hr>
+
+        <!-- comment's like and dislike buttons section  -->
+       <div id="comment-like-section" class="container">
+            {% include 'blog/comment_like_section.html' %}
+        </div>
+
+        <!-- ajax written for all like and dislike buttons to prevent refershing whole page after users click on these buttons -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- ajax for post's like , post's dislike, comment's like, comment's dislike buttons in sequence-->
+        <script type="text/javascript">
+            $(document).ready(function(event){
+                $(document).on('click', '#like', function(event){
+                    event.preventDefault();
+                    $.ajax({
+                        type : 'POST',
+                        url : "{% url 'like-post' object.id %}",
+                        data : {'csrfmiddlewaretoken' : '{{ csrf_token }}'},
+                        dataType : 'json',
+                        success: function(response){
+                            $('#like-section').html(response['form'])
+                            
+                        },
+                        error: function(rs, e){
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+                
+                 $(document).on('click', '#dislike', function(event){
+                    event.preventDefault();
+                    $.ajax({
+                        type : 'POST',
+                        url : "{% url 'dislike-post' object.id %}",
+                        data : {'csrfmiddlewaretoken' : '{{ csrf_token }}'},
+                        dataType : 'json',
+                        success: function(response){
+                            $('#like-section').html(response['form'])
+                        },
+                        error: function(rs, e){
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+
+                $(document).on('click', '#comment_like', function(event){
+                    event.preventDefault();
+                    var comment_id=this.value;
+                    $.ajax({
+                        type : 'POST',
+                        url : "{% url 'like-comment' 0 %}".replace('0', comment_id),
+                        data : {'csrfmiddlewaretoken' : '{{ csrf_token }}'},
+                        dataType : 'json',
+                        success: function(response){
+                            console.log(response['form']);
+                            $('#comment-like-section').html(response['form'])
+
+                        },
+                        error: function(rs, e){
+                            window.location.href="{% url 'login' %}?next={% url 'post-detail' object.id %}";
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+
+                  $(document).on('click', '#comment_dislike', function(event){
+                    event.preventDefault();
+                    var comment_id=this.value;
+                    $.ajax({
+                        type : 'POST',
+                        url : "{% url 'dislike-comment' 0 %}".replace('0', comment_id),
+                        data : {'csrfmiddlewaretoken' : '{{ csrf_token }}'},
+                        dataType : 'json',
+                        success: function(response){
+                            $('#comment-like-section').html(response['form'])
+                        },
+                        error: function(rs, e){
+                            window.location.href="{% url 'login' %}?next={% url 'post-detail' object.id %}"
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            $('#show').click(function(){
+            $('#exampleModal').modal('show');
+                });
+            $('#close_modal').click(function(){
+            $('#exampleModal').modal('hide');
+                });
+                 $(document).on('click', '#delete_post', function(event){
+                    $.ajax({
+
+                        type : 'POST',
+                        url : "{% url 'post-delete' object.id %}",
+                        data : {'csrfmiddlewaretoken' : '{{ csrf_token }}'},
+                        success: function(response){
+                        $('#exampleModal').modal('hide');
+                        window.location.href="{% url 'blog-home' %}";
+
+                        },
+                        error: function(rs, e){
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+        </script>
+
+
 
 {% endblock content %}

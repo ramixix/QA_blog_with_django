@@ -1,0 +1,62 @@
+<!-- display comments and comment's like and dislike buttons -->
+{% for comment in comments %}
+    <div class="media content-section" style="border: rgb(183, 183, 197) 5px solid; border-radius: 10px; background-color: rgb(230, 230, 230); padding-bottom: 0;">
+        <div style="padding: 5px;" >
+            <div style="margin: 10px;">
+                <img class="rounded-circle article-img" src="{{ comment.user.profile.image.url }}" >
+            </div>
+            <figure>
+                <blockquote class="blockquote">
+                    <p style="font-size: medium;">{{ comment.content | linebreaks}}</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    <div style="display: flex; flex-direction: column ;">
+                        <div>
+                            <cite title="Source Title" style="font-size: small;"><a title="see user profile" href="{% url 'user-profile' comment.user.username %}">{{ comment.user }}</a>
+                                    | {{ comment.comment_time|date:'F d, Y'}}</cite>
+                        </div>
+                        <div>
+                            <!-- check if user like or dislike or neither -->
+                            {% if user in comment.like.all %}
+                                <div style="display: flex; flex-wrap: nowrap; margin-top: 10px; margin-bottom: 2px;">
+                                    <form action="{% url 'like-comment' comment.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-secondary btn-sm" id="comment_like" style="background-color: rgb(0, 160, 172); border: none;" type="submit" name="comment_id" value="{{ comment.id }}" title="like it :)"><i class="fas fa-thumbs-up" style="margin-right: 5px;"></i>{{ comment.all_likes }} </button>
+                                    </form>
+                                    <form action="{% url 'dislike-comment' comment.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-secondary btn-sm" id="comment_dislike" style="margin-left: 5px; border: none;" type="submit" name="comment_id" value="{{ comment.id }}" title="dislike it! :("><i class="fas fa-thumbs-down" style="transform: scaleX(-1); margin-right: 5px;"></i>{{ comment.all_dislikes }}</button>
+                                    </form>
+                                </div>
+                            {% elif user in comment.dislike.all %}
+                                <div style="display: flex; flex-wrap: nowrap; margin-top: 10px; margin-bottom: 2px;">
+                                    <form action="{% url 'like-comment' comment.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-secondary btn-sm" id="comment_like" style="border: none;" type="submit" name="comment_id" value="{{ comment.id }}" title="like it :)"><i class="fas fa-thumbs-up" style="margin-right: 5px;"></i>{{ comment.all_likes }} </button>
+                                    </form>
+                                    <form action="{% url 'dislike-comment' comment.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-secondary btn-sm" id="comment_dislike" style="margin-left: 5px; background-color:rgb(212, 45, 45); border: none;" type="submit" name="comment_id" value="{{ comment.id }}" title="dislike it! :("><i class="fas fa-thumbs-down" style="transform: scaleX(-1); margin-right: 5px;"></i>{{ comment.all_dislikes }}</button>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div style="display: flex; flex-wrap: nowrap; margin-top: 10px; margin-bottom: 2px;">
+                                    <form action="{% url 'like-comment' comment.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-secondary btn-sm" id="comment_like" style="border: none;" type="submit" name="comment_id" value="{{ comment.id }}" title="like it :)"><i class="fas fa-thumbs-up" style="margin-right: 5px;"></i>{{ comment.all_likes }} </button>
+                                    </form>
+                                    <form action="{% url 'dislike-comment' comment.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-secondary btn-sm" id="comment_dislike" style="margin-left: 5px; border: none;" type="submit" name="comment_id" value="{{ comment.id }}" title="dislike it! :("><i class="fas fa-thumbs-down" style="transform: scaleX(-1); margin-right: 5px;"></i>{{ comment.all_dislikes }}</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+{% endfor %}
+
+<br><br>

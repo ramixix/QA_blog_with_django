@@ -1,8 +1,7 @@
 {% extends 'blog/base.html' %}
-
 {% block title %}Home Page{% endblock title %}
-
 {% block content %}
+    <!-- displaying posts in our home page -->
     {% for post in posts %}
         <article class="media content-section">
             <a href="{% url 'post-detail' post.id %}"><img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" ></a>
@@ -21,5 +20,41 @@
             <a href="{% url 'post-detail' post.id %}" class="btn btn-outline-secondary">See More...</a>
         </article>
     {% endfor %}
+    <!-- pagination  -->
+    <div style="margin-left: 30px;">
+    {% if is_paginated %}
 
+        {% if page_obj.has_previous %}
+            <a class="btn btn-primary mb-4" href="?page=1">First</a>
+            <a class="btn btn-primary mb-4" style="margin-right: 5px;" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+
+            {% for page in page_obj.paginator.page_range %}
+                {% if page == page_obj.number|add:"-4" %}
+                    <a class="btn btn-primary mb-4 disabled" href="#">...</a>
+                {% endif %}
+            {% endfor %}
+
+        {% endif %}
+
+        {% for page in page_obj.paginator.page_range %}
+            {% if page == page_obj.number %}
+                <a class="btn btn-dark  mb-4" href="?page={{page}}">{{page}}</a>
+
+            {% elif page > page_obj.number|add:"-4" and page < page_obj.number|add:"4" %}
+                <a class="btn btn-primary mb-4" href="?page={{page}}">{{page}}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            {% for page in page_obj.paginator.page_range %}
+                {% if page == page_obj.number|add:"4" %}
+                    <a class="btn btn-primary mb-4 disabled" href="#">...</a>
+                {% endif %}
+            {% endfor %}
+            <a class="btn btn-primary mb-4" style="margin-left: 5px;" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="btn btn-primary mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+
+    {% endif %}
+    </div>
 {% endblock content %}

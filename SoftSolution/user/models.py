@@ -16,6 +16,9 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username}_profile'
 
+    # overwirte the save function jsut because some profile pictures can be very big pictures
+    # so here pictures are tested, and if they have more than 300 pixels in height or width 
+    # they are going to be resize and then save to our database
     def save(self, *args, **kwargs):
         super().save(*args, **  kwargs)
 

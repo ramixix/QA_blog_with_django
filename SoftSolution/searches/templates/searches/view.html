@@ -1,0 +1,31 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<!-- page to display the result of search -->
+    <div class="row">
+        <div class="col-12 col-8 mx-auto">
+            <br>
+            <div class="container">
+                <div class="alert alert-success" style="padding: 5px ; margin-top: 10px;">Resault of "{{query}}" Search:</div>
+            </div>        
+            {% for blog_item in blog_list %}
+                <article class="media content-section">
+                <a href="{% url 'post-detail' blog_item.id %}"><img class="rounded-circle article-img" src="{{ blog_item.author.profile.image.url }}" ></a>
+                <div class="media-body">
+                <div class="article-metadata">
+                    <a class="" style="text-decoration: none; font-size: 25px;" href="{% url 'user-profile' blog_item.author.username %}">{{ blog_item.author }}</a>
+                    <br>
+                    <small class="text-muted">Date Posted : {{ blog_item.date_posted | date:"F d, Y" }}</small><br>
+                    <small class="text-muted">Category : {{ blog_item.category }}</small>
+                </div>
+                <h2><a class="article-title" href="{% url 'post-detail' blog_item.id %}">{{ blog_item.title }}</a></h2>
+                <div>
+                    <p class="article-content">{{ blog_item.snippet | slice:500 }}</p>
+                </div>
+                </div>
+                <a href="{% url 'post-detail' blog_item.id %}" class="btn btn-outline-secondary">See More...</a>
+            </article>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}

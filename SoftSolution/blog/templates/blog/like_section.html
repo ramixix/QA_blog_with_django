@@ -1,0 +1,50 @@
+{% if user.is_authenticated %}
+    {% if user in object.like.all %}
+    <!--  html code for like and dislike buttons of posts -->
+    <div style="display: flex; flex-wrap: nowrap;">
+        <form action="{% url 'like-post' object.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-md" id='like' type="submit" name="post_id" value="{{ object.id }}" title="like it :)"><i class="fas fa-thumbs-up"></i> {{ all_likes }}</i></button> 
+        </form>
+        <form action="{% url 'dislike-post' object.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger btn-md" id='dislike' style="margin-left: 5px;" type="submit" name="post_id" value="{{ object.id }}" title="dislike it! :("><i class="fas fa-thumbs-down"></i> {{ all_dislikes }}</button> 
+        </form>
+    </div>
+    {% elif user in object.dislike.all %}
+    <div style="display: flex; flex-wrap: nowrap;">
+        <form action="{% url 'like-post' object.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-outline-primary btn-md" id='like' type="submit" name="post_id" value="{{ object.id }}" title="like it :)"><i class="fas fa-thumbs-up"></i> {{ all_likes }}</i></button> 
+        </form>
+        <form action="{% url 'dislike-post' object.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-danger btn-md" id='dislike' style="margin-left: 5px;" type="submit" name="post_id" value="{{ object.id }}" title="dislike it! :("><i class="fas fa-thumbs-down"></i> {{ all_dislikes }}</button> 
+        </form>
+    </div>
+    {% else %}
+    <div style="display: flex; flex-wrap: nowrap;">
+        <form action="{% url 'like-post' object.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-outline-primary btn-md" id='like' type="submit" name="post_id" value="{{ object.id }}" title="like it :)"><i class="fas fa-thumbs-up"></i> {{ all_likes }}</i></button> 
+        </form>
+        <form action="{% url 'dislike-post' object.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger btn-md" id='dislike' style="margin-left: 5px;" type="submit" name="post_id" value="{{ object.id }}" title="dislike it! :("><i class="fas fa-thumbs-down"></i> {{ all_dislikes }}</button> 
+        </form>
+    </div>
+    {% endif %}
+<!-- if user is not authenticated then by clicking like and dislike buttons redirect them to login page -->
+{% else %}
+    <div style="display: flex; flex-wrap: nowrap;">
+        <form action="{% url 'login' %}?next={% url 'post-detail' object.id%}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-outline-primary btn-md" type="submit" name="post_id" value="{{ object.id }}" title="like it :)"><i class="fas fa-thumbs-up"></i> {{ all_likes }}</i></button> 
+        </form>
+        <form action="{% url 'login' %}?next={% url 'post-detail' object.id%}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger btn-md" style="margin-left: 5px;" type="submit" name="post_id" value="{{ object.id }}" title="dislike it! :("><i class="fas fa-thumbs-down"></i> {{ all_dislikes }}</button> 
+        </form>
+    </div>
+{% endif%}
+    
