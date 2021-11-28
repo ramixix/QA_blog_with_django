@@ -196,7 +196,7 @@ body {
 
   line-height: 1.8;
   color: #222;
-  background: #f8f8f8;
+  background: url(../../../media/back1.jpeg);
   font-weight: 400;
   }
 
@@ -204,16 +204,17 @@ body {
   width: 900px;
   background: #fff;
   margin: 0 auto;
+  margin-top: 5%;
   box-shadow: 0px 15px 16.83px 0.17px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: 0px 15px 16.83px 0.17px rgba(0, 0, 0, 0.05);
   -webkit-box-shadow: 0px 15px 16.83px 0.17px rgba(0, 0, 0, 0.05);
   -o-box-shadow: 0px 15px 16.83px 0.17px rgba(0, 0, 0, 0.05);
   -ms-box-shadow: 0px 15px 16.83px 0.17px rgba(0, 0, 0, 0.05);
-  border-radius: 20px;
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -o-border-radius: 20px;
-  -ms-border-radius: 20px; }
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -o-border-radius: 15px;
+  -ms-border-radius: 15px; }
 
 .display-flex {
   justify-content: space-between;
@@ -520,6 +521,20 @@ label.valid {
   .container {
     width: calc( 100% - 30px);
     max-width: 100%; } }
+
+@media screen and (max-width: 1300px) {
+  .container {
+    margin-top: 8%;  
+  } }
+  @media screen and (max-width: 900px) {
+    .container {
+      margin-top: 10%;  
+    } }
+  @media screen and (max-width: 600px) {
+    .container {
+      margin-top: 18%;  
+    } }
+
 @media screen and (min-width: 1024px) {
   .container {
     max-width: 1200px; } }

@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-      <link rel="SHORTCUT ICON" href="/media/favicon.ico">
+      <link rel="SHORTCUT ICON" href="/media/logo-round.png">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,12 +16,12 @@
   </head>
     <body>
         <!-- navbar seciton -->
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #bac1ca; opacity: 0.85;">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background: linear-gradient(to bottom, #a5a7ac 50%, #413f3f 100%); opacity: 0.85;">
             <div class="container-fluid" style="opacity: 1;">
             <a class="navbar-brand" href="https://www.ktu.edu.tr/">
-                <img width="35px" height="30px"src="https://upload.wikimedia.org/wikipedia/tr/7/7d/KTU_Yeni_Logo.png" style="position:relative;">
+                <img width="35px" height="30px"src="/media/logo-round.png" style="position:relative;">
             </a>
-            <a class="navbar-brand"  href="{% url 'blog-home' %}"> <small> ktu<strong>overflow</strong></small></a>
+            <a class="navbar-brand"  href="{% url 'blog-home' %}"> <small> Q/A <strong>overflow</strong></small></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -39,7 +39,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           Categories
                         </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #ccd5e0; border: double 2px darkgrey; border-top: none; margin-left: 20%;">
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #d3d3d3; border: double 2px darkgrey; border-top: none; margin-left: 20%;">
                                 {% for item in all_categories %}
                                     <li><a class="dropdown-item" href="{% url 'blog-category' item %}"><img src="/media/{{item.logo}}"> {{ item }}</a></li>
                                 {% endfor %}
@@ -67,17 +67,17 @@
 
                 </ul>
                 <!-- search bar -->
-                <form class="form-inline my-2 my-lg-0" action="/search/">
+                <form class="form-inline my-2 my-lg-0 search_area" action="/search/">
                     <div style="display: flex;">
                       <input class="form-control mr-sm-2" type="search" placeholder="Search" name="q" aria-label="Search">
-                      <button class="btn btn-outline-success my-2 my-sm-0" style="margin-left: 10px;" type="submit">Search</button>
+                      <button class="btn btn-outline-success my-2 my-sm-0" style="margin-left: 10px; color: rgba(0, 255, 149, 0.925);" type="submit">Search</button>
                     </div>
                   </form>
             </div>
             </div>
         </nav>
         <!-- main body -->
-        <main role="main" class="container" style="margin-top: 5%;">
+        <main role="main" class="container">
         <div class="row">
             <div class="col-md-11">
                 <!-- print messages in message list  -->
